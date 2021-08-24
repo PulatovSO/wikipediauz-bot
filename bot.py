@@ -1,9 +1,10 @@
 
-import logging
+import logging, wikipedia
  
 from aiogram import Bot, Dispatcher, executor, types
  
 API_TOKEN = '1935628616:AAE7QZZzo6LjbR8e9FMaLm1OzzqBJG3Vq54'
+wikipedia.set_lang('uz')
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -18,16 +19,20 @@ async def send_welcome(message: types.Message):
     """
     This handler will be called when user sends `/start` or `/help` command
     """
-    await message.reply("Assalomu alaykum \n exo botga xush kelibsiz")
+    await message.reply("Assalomu alaykum\nwikiuz botga xush kelibsiz")
 
 
 
 @dp.message_handler()
-async def echo(message: types.Message):
+async def wikisend(message: types.Message):
     # old style:
     # await bot.send_message(message.chat.id, message.text)
 
-    await message.answer(message.text)
+    try:
+      respond = wikipedia.summary(message.text)
+      await message.answer(respond)
+    except:
+      await message.answer('Bunday maqola mavjus emas!')
 
 
 if __name__ == '__main__':
